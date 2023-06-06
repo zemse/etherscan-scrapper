@@ -6,7 +6,7 @@ describe('tx-decoder', () => {
       '0x68227e0c0183f6dec64a36a2c79cc4b8a6ddfe86bdf248264cc9abf887368fca'
     );
 
-    console.log(JSON.stringify(result, null, 2));
+    // console.log(JSON.stringify(result, null, 2));
 
     expect(result).toEqual({
       '0x1f9090aae28b8a3dceadf281b0f12828e676c326': {
@@ -54,7 +54,7 @@ describe('tx-decoder', () => {
       '0x9cd6fe2e579f546a4f7e285e4e7a61751a225634acc1a8217db5c0c0ba16e169'
     );
 
-    console.log(JSON.stringify(result, null, 2));
+    // console.log(JSON.stringify(result, null, 2));
 
     expect(result).toEqual({
       '0x0000b8e312942521fb3bf278d2ef2458b0d3f243': {

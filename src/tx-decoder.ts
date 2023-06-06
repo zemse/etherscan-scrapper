@@ -25,7 +25,7 @@ export interface RecordsByAddress<T> {
   [address: string]: Record<T>;
 }
 
-export async function stateDiff(txHash: string) {
+export async function stateDiff(txHash: string): Promise<StateDiff> {
   const browser = await puppeteer.launch({ headless: 'new' });
   const page = await browser.newPage();
   await page.goto('https://etherscan.io/tx-decoder?tx=' + txHash);
@@ -33,7 +33,7 @@ export async function stateDiff(txHash: string) {
   const content = await page.$('#ContentPlaceHolder1_accountStateDiff ')!;
   let trHandles = await content?.$$('tr')!;
 
-  const result: { [address: string]: { [dataName: string]: any } } = {};
+  const result: StateDiff = {};
 
   let lastAddress = '';
   for (const tr of trHandles.slice(1)) {
@@ -72,16 +72,11 @@ export async function stateDiff(txHash: string) {
       }
     } else {
       // storage entry
-      console.log('storage');
-
-      //   const storage1: RecordsByAddress<string> = {} as any;
-      //   const storage2: RecordsByAddress<string> = {} as any;
       const storage = await tr.$$eval('td div', nodes => {
         return nodes
           .map(topDiv => topDiv.querySelectorAll('div'))
           .filter(divs => divs.length >= 2)
           .map(divs => {
-            console.log('storage2');
             let storageSlot = divs[0].querySelector('dd')?.innerText!;
             let before = divs[1].querySelector('dd span')?.innerHTML!;
             let after = divs[3].querySelector('dd span')?.innerHTML!;
@@ -92,12 +87,10 @@ export async function stateDiff(txHash: string) {
             return acc;
           }, {} as RecordsByAddress<string>);
       });
-      console.log('storage4');
       result[lastAddress] = {
         ...(result[lastAddress] ?? {}),
         storage,
       };
-      console.log('storage5');
     }
   }
 
